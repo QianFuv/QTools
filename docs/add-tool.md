@@ -2,10 +2,18 @@
 
 ## File Structure
 
-Each tool consists of a backend command module and a frontend tool module:
+Each tool consists of a backend command module and a frontend tool module. The backend module can be either a single file or a directory, depending on complexity:
 
 ```
-src-tauri/src/commands/<name>.rs        Backend command handlers
+# Single-file module (simple tools)
+src-tauri/src/commands/<name>.rs
+
+# Directory module (complex tools)
+src-tauri/src/commands/<name>/
+  mod.rs                                Public command handlers (re-exports)
+  ...                                   Internal submodules as needed
+
+# Frontend (always a directory)
 src/tools/<name>/index.tsx              ToolDefinition export
 src/tools/<name>/<Name>Tool.tsx         Tool UI component
 ```
@@ -14,7 +22,11 @@ src/tools/<name>/<Name>Tool.tsx         Tool UI component
 
 ### 1. Create the command module
 
-Create `src-tauri/src/commands/<name>.rs`. Each command function must:
+For simple tools, create `src-tauri/src/commands/<name>.rs`.
+
+For complex tools with multiple files, create a directory `src-tauri/src/commands/<name>/` with a `mod.rs` that re-exports the public command functions. Internal logic can be split into private submodules within the directory.
+
+All command functions must:
 
 - Be marked with `#[tauri::command]` and declared `pub`
 - Return `Result<T, AppError>` — never use `.unwrap()` or `.expect()`
@@ -22,7 +34,7 @@ Create `src-tauri/src/commands/<name>.rs`. Each command function must:
 
 ### 2. Register the module
 
-Add `pub mod <name>;` to `src-tauri/src/commands/mod.rs`.
+Add `pub mod <name>;` to `src-tauri/src/commands/mod.rs`. This works identically for both single-file and directory modules.
 
 ### 3. Register the handler
 
