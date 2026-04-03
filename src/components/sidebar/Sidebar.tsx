@@ -6,7 +6,7 @@ export default function Sidebar() {
   const { activeTool, setActiveTool, tools } = useActiveTool();
 
   return (
-    <nav class="flex w-48 flex-col gap-1 border-r border-maroon-200 bg-maroon-100 p-2 dark:border-maroon-700 dark:bg-maroon-900">
+    <nav class="flex w-48 flex-col gap-1 border-r border-qtools-200 bg-qtools-100 p-2 dark:border-qtools-700 dark:bg-qtools-900">
       <For each={tools}>
         {(tool) => (
           <SidebarItem

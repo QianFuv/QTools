@@ -7,7 +7,7 @@ export default function DarkModeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      class="rounded-lg p-1.5 text-maroon-200 transition-colors hover:bg-maroon-700 hover:text-maroon-50"
+      class="rounded-lg p-1.5 text-qtools-200 transition-colors hover:bg-qtools-700 hover:text-qtools-50"
       aria-label="Toggle dark mode"
     >
       <Show
