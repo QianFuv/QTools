@@ -15,3 +15,61 @@
   --color-qtools-900: oklch(0.329 0.076 265.46);
   --color-qtools-950: oklch(0.235 0.053 264.06);
 }
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(0.702 0.1 269.59) transparent;
+}
+
+:where(.dark, .dark *) {
+  scrollbar-color: oklch(0.479 0.11 265.46) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.702 0.1 269.59);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.556 0.128 265.77);
+}
+
+:where(.dark, .dark *)::-webkit-scrollbar-thumb {
+  background: oklch(0.479 0.11 265.46);
+}
+
+:where(.dark, .dark *)::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.556 0.128 265.77);
+}
+
+@keyframes typing-bounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+
+.typing-dot {
+  animation: typing-bounce 1.2s ease-in-out infinite;
+}
+
+.animation-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animation-delay-400 {
+  animation-delay: 0.4s;
+}
