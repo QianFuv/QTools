@@ -7,6 +7,18 @@ pub enum AppError {
     /// A catch-all variant for unexpected internal failures.
     #[error("{0}")]
     Internal(String),
+
+    /// An error originating from the LLM provider or rig library.
+    #[error("Provider error: {0}")]
+    Provider(String),
+
+    /// An error related to agent settings persistence.
+    #[error("Settings error: {0}")]
+    Settings(String),
+
+    /// The requested conversation was not found.
+    #[error("Conversation not found: {0}")]
+    ConversationNotFound(String),
 }
 
 impl serde::Serialize for AppError {
