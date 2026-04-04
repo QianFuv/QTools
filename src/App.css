@@ -110,6 +110,14 @@
   max-width: 100%;
 }
 
+.prose-qtools :where(a) {
+  transition: color 150ms ease;
+}
+
+.prose-qtools :where(a:hover, a:focus-visible) {
+  color: var(--color-qtools-500);
+}
+
 .prose-qtools :where(.katex) {
   color: var(--color-qtools-900);
 }
@@ -339,6 +347,10 @@
 
 .dark .prose-qtools :where(.katex) {
   color: var(--color-qtools-50);
+}
+
+.dark .prose-qtools :where(a:hover, a:focus-visible) {
+  color: var(--color-qtools-300);
 }
 
 .dark .prose-qtools :where(mark) {
