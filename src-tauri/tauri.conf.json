@@ -13,8 +13,10 @@
     "windows": [
       {
         "title": "qtools",
-        "width": 800,
-        "height": 600,
+        "width": 1152,
+        "height": 720,
+        "minWidth": 1152,
+        "minHeight": 720,
         "decorations": false
       }
     ],
