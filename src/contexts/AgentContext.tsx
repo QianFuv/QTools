@@ -10,6 +10,7 @@ import type {
   AgentSettings,
   ChatMessage,
   Conversation,
+  ToolCallInfo,
   StreamEvent,
 } from "../types/agent";
 
@@ -28,6 +29,7 @@ interface AgentContextValue {
   settings: () => AgentSettings;
   isStreaming: () => boolean;
   streamingContent: () => string;
+  toolCalls: () => ToolCallInfo[];
   loadConversations: () => Promise<void>;
   selectConversation: (id: string) => Promise<void>;
   createConversation: () => Promise<void>;
@@ -45,6 +47,7 @@ export const AgentProvider: ParentComponent = (props) => {
   const [settings, setSettings] = createSignal<AgentSettings>(DEFAULT_SETTINGS);
   const [isStreaming, setIsStreaming] = createSignal(false);
   const [streamingContent, setStreamingContent] = createSignal("");
+  const [toolCalls, setToolCalls] = createSignal<ToolCallInfo[]>([]);
 
   const loadConversations = async () => {
     try {
@@ -105,12 +108,15 @@ export const AgentProvider: ParentComponent = (props) => {
     setMessages((prev) => [...prev, userMsg]);
     setIsStreaming(true);
     setStreamingContent("");
+    setToolCalls([]);
 
     try {
       const channel = new Channel<StreamEvent>();
       channel.onmessage = (event: StreamEvent) => {
         if (event.event === "delta") {
           setStreamingContent((prev) => prev + event.data.content);
+        } else if (event.event === "toolCall") {
+          setToolCalls((prev) => [...prev, event.data]);
         } else if (event.event === "done") {
           setMessages((prev) => [...prev, event.data.message]);
           setStreamingContent("");
@@ -159,6 +165,7 @@ export const AgentProvider: ParentComponent = (props) => {
         settings,
         isStreaming,
         streamingContent,
+        toolCalls,
         loadConversations,
         selectConversation,
         createConversation,

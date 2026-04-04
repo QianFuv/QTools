@@ -25,7 +25,14 @@ export interface ChatMessage {
   created_at: string;
 }
 
+export interface ToolCallInfo {
+  name: string;
+  args: string;
+  result: string;
+}
+
 export type StreamEvent =
   | { event: "delta"; data: { content: string } }
+  | { event: "toolCall"; data: ToolCallInfo }
   | { event: "done"; data: { message: ChatMessage } }
   | { event: "error"; data: { message: string } };
