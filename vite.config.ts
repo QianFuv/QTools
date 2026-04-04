@@ -8,9 +8,6 @@ const host = process.env.TAURI_DEV_HOST;
 // https://vite.dev/config/
 export default defineConfig(async () => ({
   plugins: [solid(), tailwindcss()],
-  optimizeDeps: {
-    include: ["solid-markdown > micromark", "solid-markdown > unified"],
-  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //

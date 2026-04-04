@@ -1,13 +1,13 @@
 import { For, Show, createEffect } from "solid-js";
-import { SolidMarkdown } from "solid-markdown";
 import { useAgent } from "../../contexts/AgentContext";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
 import {
+  AgentMarkdown,
   agentMarkdownClass,
-  agentMarkdownComponents,
-  agentRemarkPlugins,
 } from "./markdown";
+
+const bubbleClass = "w-full max-w-[48rem] min-w-0 rounded-2xl rounded-bl-sm bg-qtools-100 px-4 py-2 text-sm text-qtools-900 dark:bg-qtools-800 dark:text-qtools-100";
 
 export default function ChatPanel() {
   const { messages, activeConversation, sendMessage, isStreaming, streamingContent, toolCalls } = useAgent();
@@ -39,33 +39,30 @@ export default function ChatPanel() {
             {(msg) => <ChatMessage message={msg} />}
           </For>
           <Show when={isStreaming() && toolCalls().length > 0}>
-            <div class="mb-4">
-              <For each={toolCalls()}>
-                {(call) => (
-                  <div class="mb-2 rounded-lg border border-qtools-200 bg-qtools-50 px-3 py-2 text-xs dark:border-qtools-700 dark:bg-qtools-900">
-                    <div class="flex items-center gap-1.5 font-medium text-qtools-500 dark:text-qtools-400">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
-                      </svg>
-                      {call.name}
-                      <span class="font-normal text-qtools-400 dark:text-qtools-500">({call.args})</span>
+            <div class="mb-4 flex justify-start">
+              <div class="w-full max-w-[48rem] min-w-0">
+                <For each={toolCalls()}>
+                  {(call) => (
+                    <div class="mb-2 min-w-0 overflow-x-auto rounded-lg border border-qtools-200 bg-qtools-50 px-3 py-2 text-xs dark:border-qtools-700 dark:bg-qtools-900">
+                      <div class="flex min-w-max items-center gap-1.5 font-medium text-qtools-500 dark:text-qtools-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                        </svg>
+                        {call.name}
+                        <span class="font-normal text-qtools-400 dark:text-qtools-500">({call.args})</span>
+                      </div>
                     </div>
-                  </div>
-                )}
-              </For>
+                  )}
+                </For>
+              </div>
             </div>
           </Show>
           <Show when={isStreaming() && streamingContent()}>
             <div class="mb-4 flex justify-start">
-              <div class="max-w-[80%] rounded-2xl rounded-bl-sm bg-qtools-100 px-4 py-2 text-sm text-qtools-900 dark:bg-qtools-800 dark:text-qtools-100">
-                <div class="overflow-x-auto">
+              <div class={bubbleClass}>
+                <div class="min-w-0 overflow-x-auto">
                   <div class={agentMarkdownClass}>
-                    <SolidMarkdown
-                      children={streamingContent()}
-                      components={agentMarkdownComponents}
-                      renderingStrategy="reconcile"
-                      remarkPlugins={agentRemarkPlugins}
-                    />
+                    <AgentMarkdown content={streamingContent()} renderingStrategy="reconcile" />
                   </div>
                 </div>
               </div>

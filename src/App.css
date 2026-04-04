@@ -102,6 +102,334 @@
   animation: typing-bounce 1.2s ease-in-out infinite;
 }
 
+.prose-qtools {
+  min-width: 0;
+}
+
+.prose-qtools > * {
+  max-width: 100%;
+}
+
+.prose-qtools :where(.katex) {
+  color: var(--color-qtools-900);
+}
+
+.prose-qtools :where(.katex-display) {
+  max-width: 100%;
+  margin: 1.25rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0.2rem 0;
+}
+
+.prose-qtools :where(.katex-display > .katex) {
+  display: inline-block;
+  min-width: fit-content;
+}
+
+.prose-qtools :where(mark) {
+  border-radius: 0.3rem;
+  padding: 0.05rem 0.3rem;
+  color: var(--color-qtools-900);
+  background: color-mix(in oklab, var(--color-qtools-200) 90%, white 10%);
+}
+
+.prose-qtools :where(ins) {
+  color: var(--color-qtools-700);
+  text-decoration-color: var(--color-qtools-400);
+  text-decoration-thickness: 0.12em;
+  text-underline-offset: 0.14em;
+}
+
+.prose-qtools :where(abbr[title]) {
+  cursor: help;
+  text-decoration: underline dotted color-mix(in oklab, var(--color-qtools-500) 70%, transparent);
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.16em;
+}
+
+.prose-qtools :where(dl) {
+  margin: 1rem 0;
+}
+
+.prose-qtools :where(dt) {
+  margin-top: 1rem;
+  color: var(--color-qtools-900);
+  font-weight: 600;
+}
+
+.prose-qtools :where(dd) {
+  margin-top: 0.4rem;
+  margin-left: 0;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-qtools-200);
+}
+
+.prose-qtools :where(.footnotes) {
+  margin-top: 1.5rem;
+  color: var(--color-qtools-700);
+  font-size: 0.875rem;
+}
+
+.prose-qtools :where(.footnotes-list) {
+  padding-left: 1.25rem;
+}
+
+.prose-qtools :where(.footnote-item) {
+  padding-left: 0.25rem;
+}
+
+.prose-qtools :where(.footnote-item > :first-child),
+.prose-qtools :where(.agent-markdown-container-body > :first-child) {
+  margin-top: 0;
+}
+
+.prose-qtools :where(.footnote-item > :last-child),
+.prose-qtools :where(.agent-markdown-container-body > :last-child) {
+  margin-bottom: 0;
+}
+
+.prose-qtools :where(.footnote-ref),
+.prose-qtools :where(.footnote-backref) {
+  font-weight: 600;
+}
+
+.prose-qtools :where(.agent-markdown-container) {
+  margin: 1rem 0;
+  border: 1px solid var(--agent-markdown-container-border);
+  border-left-width: 4px;
+  border-radius: 1rem;
+  background: var(--agent-markdown-container-bg);
+  overflow: hidden;
+}
+
+.prose-qtools :where(.agent-markdown-container-title) {
+  padding: 0.85rem 1rem 0.25rem;
+  color: var(--agent-markdown-container-accent);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.prose-qtools :where(.agent-markdown-container-body) {
+  padding: 0.25rem 1rem 0.95rem;
+}
+
+.prose-qtools :where(.agent-markdown-container-warning) {
+  --agent-markdown-container-accent: oklch(0.49 0.14 61);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.69 0.15 77) 65%, white 35%);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.96 0.03 88) 90%, white 10%);
+}
+
+.prose-qtools :where(.agent-markdown-container-info) {
+  --agent-markdown-container-accent: oklch(0.49 0.09 241);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.68 0.09 240) 70%, white 30%);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.95 0.02 236) 92%, white 8%);
+}
+
+.prose-qtools :where(.agent-markdown-container-tip) {
+  --agent-markdown-container-accent: oklch(0.49 0.12 152);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.73 0.11 151) 72%, white 28%);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.96 0.02 158) 92%, white 8%);
+}
+
+.prose-qtools :where(.agent-markdown-container-success) {
+  --agent-markdown-container-accent: oklch(0.51 0.11 145);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.74 0.11 147) 72%, white 28%);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.96 0.02 150) 92%, white 8%);
+}
+
+.prose-qtools :where(.agent-markdown-container-danger) {
+  --agent-markdown-container-accent: oklch(0.55 0.2 24);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.74 0.17 22) 72%, white 28%);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.96 0.02 24) 92%, white 8%);
+}
+
+.prose-qtools :where(.agent-markdown-container-note) {
+  --agent-markdown-container-accent: var(--color-qtools-700);
+  --agent-markdown-container-border: color-mix(in oklab, var(--color-qtools-300) 78%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, var(--color-qtools-100) 78%, white 22%);
+}
+
+.prose-qtools :where(.agent-markdown-code-block) {
+  margin: 1rem 0;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklab, var(--color-qtools-300) 75%, transparent);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--color-qtools-900) 94%, white 6%);
+}
+
+.prose-qtools :where(.agent-markdown-code-toolbar) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid color-mix(in oklab, var(--color-qtools-700) 55%, transparent);
+  background: color-mix(in oklab, var(--color-qtools-950) 92%, white 8%);
+}
+
+.prose-qtools :where(.agent-markdown-code-language) {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--color-qtools-200);
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.08em;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.prose-qtools :where(.agent-markdown-copy-button) {
+  flex-shrink: 0;
+  border: 1px solid color-mix(in oklab, var(--color-qtools-500) 50%, transparent);
+  border-radius: 9999px;
+  padding: 0.35rem 0.75rem;
+  color: var(--color-qtools-100);
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  background: color-mix(in oklab, var(--color-qtools-700) 70%, transparent);
+  transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
+}
+
+.prose-qtools :where(.agent-markdown-copy-button:hover) {
+  background: color-mix(in oklab, var(--color-qtools-600) 82%, transparent);
+  border-color: color-mix(in oklab, var(--color-qtools-400) 75%, transparent);
+}
+
+.prose-qtools :where(.agent-markdown-copy-button[data-state="copied"]) {
+  color: var(--color-qtools-950);
+  background: var(--color-qtools-300);
+  border-color: var(--color-qtools-300);
+}
+
+.prose-qtools :where(.agent-markdown-code-block pre) {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-radius: 0 0 1rem 1rem;
+}
+
+.prose-qtools :where(.agent-markdown-code-block pre > code) {
+  display: block;
+  min-width: fit-content;
+}
+
+.prose-qtools :where(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.prose-qtools :where(table > thead, table > tbody) {
+  display: table;
+  min-width: 100%;
+}
+
+.prose-qtools :where(blockquote, img, svg, video, iframe) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.dark .prose-qtools :where(.katex) {
+  color: var(--color-qtools-50);
+}
+
+.dark .prose-qtools :where(mark) {
+  color: var(--color-qtools-950);
+  background: color-mix(in oklab, var(--color-qtools-300) 88%, white 12%);
+}
+
+.dark .prose-qtools :where(ins) {
+  color: var(--color-qtools-200);
+  text-decoration-color: var(--color-qtools-500);
+}
+
+.dark .prose-qtools :where(abbr[title]) {
+  text-decoration-color: color-mix(in oklab, var(--color-qtools-300) 55%, transparent);
+}
+
+.dark .prose-qtools :where(dt) {
+  color: var(--color-qtools-50);
+}
+
+.dark .prose-qtools :where(dd) {
+  border-left-color: var(--color-qtools-700);
+}
+
+.dark .prose-qtools :where(.footnotes) {
+  color: var(--color-qtools-300);
+}
+
+.dark .prose-qtools :where(.agent-markdown-container-warning) {
+  --agent-markdown-container-accent: oklch(0.84 0.11 84);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.64 0.11 74) 75%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.28 0.03 75) 74%, black 26%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-container-info) {
+  --agent-markdown-container-accent: oklch(0.85 0.05 238);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.53 0.07 240) 78%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.28 0.03 242) 78%, black 22%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-container-tip) {
+  --agent-markdown-container-accent: oklch(0.84 0.08 154);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.53 0.08 154) 78%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.29 0.03 152) 78%, black 22%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-container-success) {
+  --agent-markdown-container-accent: oklch(0.84 0.08 146);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.54 0.08 146) 78%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.29 0.03 146) 78%, black 22%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-container-danger) {
+  --agent-markdown-container-accent: oklch(0.84 0.1 24);
+  --agent-markdown-container-border: color-mix(in oklab, oklch(0.58 0.11 23) 78%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, oklch(0.29 0.03 24) 78%, black 22%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-container-note) {
+  --agent-markdown-container-accent: var(--color-qtools-200);
+  --agent-markdown-container-border: color-mix(in oklab, var(--color-qtools-700) 82%, transparent);
+  --agent-markdown-container-bg: color-mix(in oklab, var(--color-qtools-900) 48%, transparent);
+}
+
+.dark .prose-qtools :where(.agent-markdown-code-block) {
+  border-color: color-mix(in oklab, var(--color-qtools-700) 85%, transparent);
+  background: color-mix(in oklab, var(--color-qtools-950) 92%, black 8%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-code-toolbar) {
+  border-bottom-color: color-mix(in oklab, var(--color-qtools-700) 85%, transparent);
+  background: color-mix(in oklab, var(--color-qtools-950) 96%, black 4%);
+}
+
+.dark .prose-qtools :where(.agent-markdown-copy-button) {
+  border-color: color-mix(in oklab, var(--color-qtools-500) 55%, transparent);
+  color: var(--color-qtools-100);
+  background: color-mix(in oklab, var(--color-qtools-800) 85%, transparent);
+}
+
+.dark .prose-qtools :where(.agent-markdown-copy-button:hover) {
+  border-color: color-mix(in oklab, var(--color-qtools-400) 75%, transparent);
+  background: color-mix(in oklab, var(--color-qtools-700) 85%, transparent);
+}
+
+.dark .prose-qtools :where(.agent-markdown-copy-button[data-state="copied"]) {
+  color: var(--color-qtools-950);
+  background: var(--color-qtools-300);
+  border-color: var(--color-qtools-300);
+}
+
 .animation-delay-200 {
   animation-delay: 0.2s;
 }
