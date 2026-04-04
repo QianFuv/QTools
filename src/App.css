@@ -110,12 +110,24 @@
   max-width: 100%;
 }
 
-.prose-qtools :where(a) {
+.prose-qtools :where(.agent-markdown-content > :first-child) {
+  margin-top: 0;
+}
+
+.prose-qtools :where(.agent-markdown-content > :last-child) {
+  margin-bottom: 0;
+}
+
+.prose-qtools a.agent-markdown-link {
+  color: var(--color-qtools-500) !important;
+  font-weight: 600;
+  text-decoration: none !important;
   transition: color 150ms ease;
 }
 
-.prose-qtools :where(a:hover, a:focus-visible) {
-  color: var(--color-qtools-500);
+.prose-qtools a.agent-markdown-link:hover,
+.prose-qtools a.agent-markdown-link:focus-visible {
+  color: var(--color-qtools-400) !important;
 }
 
 .prose-qtools :where(.katex) {
@@ -180,11 +192,23 @@
 }
 
 .prose-qtools :where(.footnotes-list) {
-  padding-left: 1.25rem;
+  padding-left: 0;
+  list-style-position: inside;
 }
 
 .prose-qtools :where(.footnote-item) {
+  display: inline list-item;
+  margin-right: 1.75rem;
   padding-left: 0.25rem;
+}
+
+.prose-qtools :where(.footnote-item > p) {
+  display: inline;
+  margin: 0;
+}
+
+.prose-qtools :where(.footnote-item > p + p) {
+  margin-left: 0.25rem;
 }
 
 .prose-qtools :where(.footnote-item > :first-child),
@@ -349,8 +373,13 @@
   color: var(--color-qtools-50);
 }
 
-.dark .prose-qtools :where(a:hover, a:focus-visible) {
-  color: var(--color-qtools-300);
+.dark .prose-qtools a.agent-markdown-link:hover,
+.dark .prose-qtools a.agent-markdown-link:focus-visible {
+  color: var(--color-qtools-200) !important;
+}
+
+.dark .prose-qtools a.agent-markdown-link {
+  color: var(--color-qtools-300) !important;
 }
 
 .dark .prose-qtools :where(mark) {

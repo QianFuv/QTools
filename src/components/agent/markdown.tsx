@@ -195,6 +195,7 @@ const renderInlineCode: MarkdownRenderRule = (tokens, idx, options, env, self) =
 };
 
 const renderLinkOpen: MarkdownRenderRule = (tokens, idx, options, env, self) => {
+  tokens[idx].attrJoin("class", "agent-markdown-link");
   tokens[idx].attrJoin("rel", "noreferrer noopener");
 
   return defaultLinkOpenRenderer
@@ -249,7 +250,7 @@ export function AgentMarkdown(props: AgentMarkdownProps) {
     await openUrl(url);
   };
 
-  return <div onClick={handleClick} innerHTML={renderedHtml()} />;
+  return <div class="agent-markdown-content" onClick={handleClick} innerHTML={renderedHtml()} />;
 }
 
 export function ExternalLinkConfirmDialog() {
