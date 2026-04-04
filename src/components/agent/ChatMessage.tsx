@@ -8,7 +8,7 @@ interface ChatMessageProps {
   message: ChatMessageType;
 }
 
-const bubbleClass = "w-full max-w-[48rem] min-w-0 rounded-2xl px-4 py-2 text-sm";
+const bubbleClass = "w-fit max-w-[min(48rem,100%)] min-w-0 rounded-2xl px-4 py-2 text-sm";
 
 export default function ChatMessage(props: ChatMessageProps) {
   const isUser = () => props.message.role === "user";

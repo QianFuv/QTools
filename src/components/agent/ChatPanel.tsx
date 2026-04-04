@@ -7,7 +7,7 @@ import {
   agentMarkdownClass,
 } from "./markdown";
 
-const bubbleClass = "w-full max-w-[48rem] min-w-0 rounded-2xl rounded-bl-sm bg-qtools-100 px-4 py-2 text-sm text-qtools-900 dark:bg-qtools-800 dark:text-qtools-100";
+const bubbleClass = "w-fit max-w-[min(48rem,100%)] min-w-0 rounded-2xl rounded-bl-sm bg-qtools-100 px-4 py-2 text-sm text-qtools-900 dark:bg-qtools-800 dark:text-qtools-100";
 
 export default function ChatPanel() {
   const { messages, activeConversation, sendMessage, isStreaming, streamingContent, toolCalls } = useAgent();
