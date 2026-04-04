@@ -17,6 +17,41 @@
   --color-qtools-950: oklch(0.235 0.053 264.06);
 }
 
+@utility prose-qtools {
+  --tw-prose-body: var(--color-qtools-800);
+  --tw-prose-headings: var(--color-qtools-900);
+  --tw-prose-lead: var(--color-qtools-700);
+  --tw-prose-links: var(--color-qtools-700);
+  --tw-prose-bold: var(--color-qtools-900);
+  --tw-prose-counters: var(--color-qtools-500);
+  --tw-prose-bullets: var(--color-qtools-400);
+  --tw-prose-hr: var(--color-qtools-300);
+  --tw-prose-quotes: var(--color-qtools-900);
+  --tw-prose-quote-borders: var(--color-qtools-300);
+  --tw-prose-captions: var(--color-qtools-600);
+  --tw-prose-code: var(--color-qtools-900);
+  --tw-prose-pre-code: var(--color-qtools-100);
+  --tw-prose-pre-bg: var(--color-qtools-900);
+  --tw-prose-th-borders: var(--color-qtools-300);
+  --tw-prose-td-borders: var(--color-qtools-200);
+  --tw-prose-invert-body: var(--color-qtools-100);
+  --tw-prose-invert-headings: var(--color-qtools-50);
+  --tw-prose-invert-lead: var(--color-qtools-200);
+  --tw-prose-invert-links: var(--color-qtools-100);
+  --tw-prose-invert-bold: var(--color-qtools-50);
+  --tw-prose-invert-counters: var(--color-qtools-400);
+  --tw-prose-invert-bullets: var(--color-qtools-500);
+  --tw-prose-invert-hr: var(--color-qtools-700);
+  --tw-prose-invert-quotes: var(--color-qtools-100);
+  --tw-prose-invert-quote-borders: var(--color-qtools-700);
+  --tw-prose-invert-captions: var(--color-qtools-300);
+  --tw-prose-invert-code: var(--color-qtools-50);
+  --tw-prose-invert-pre-code: var(--color-qtools-100);
+  --tw-prose-invert-pre-bg: color-mix(in oklab, var(--color-qtools-950) 80%, transparent);
+  --tw-prose-invert-th-borders: var(--color-qtools-600);
+  --tw-prose-invert-td-borders: var(--color-qtools-700);
+}
+
 * {
   scrollbar-width: thin;
   scrollbar-color: oklch(0.702 0.1 269.59) transparent;

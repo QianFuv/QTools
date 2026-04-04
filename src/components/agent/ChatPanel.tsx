@@ -3,7 +3,7 @@ import { SolidMarkdown } from "solid-markdown";
 import { useAgent } from "../../contexts/AgentContext";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-import { agentRemarkPlugins } from "./markdown";
+import { agentMarkdownClass, agentRemarkPlugins } from "./markdown";
 
 export default function ChatPanel() {
   const { messages, activeConversation, sendMessage, isStreaming, streamingContent, toolCalls } = useAgent();
@@ -55,7 +55,7 @@ export default function ChatPanel() {
             <div class="mb-4 flex justify-start">
               <div class="max-w-[80%] rounded-2xl rounded-bl-sm bg-qtools-100 px-4 py-2 text-sm text-qtools-900 dark:bg-qtools-800 dark:text-qtools-100">
                 <div class="overflow-x-auto">
-                  <div class="prose prose-sm max-w-none break-words dark:prose-invert">
+                  <div class={agentMarkdownClass}>
                     <SolidMarkdown
                       children={streamingContent()}
                       renderingStrategy="reconcile"

@@ -1,6 +1,6 @@
 import { SolidMarkdown } from "solid-markdown";
 import type { ChatMessage as ChatMessageType } from "../../types/agent";
-import { agentRemarkPlugins } from "./markdown";
+import { agentMarkdownClass, agentRemarkPlugins } from "./markdown";
 
 interface ChatMessageProps {
   message: ChatMessageType;
@@ -22,7 +22,7 @@ export default function ChatMessage(props: ChatMessageProps) {
           <p class="whitespace-pre-wrap">{props.message.content}</p>
         ) : (
           <div class="overflow-x-auto">
-            <div class="prose prose-sm max-w-none break-words dark:prose-invert">
+            <div class={agentMarkdownClass}>
               <SolidMarkdown
                 children={props.message.content}
                 renderingStrategy="memo"
