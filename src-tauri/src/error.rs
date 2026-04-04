@@ -26,3 +26,9 @@ impl serde::Serialize for AppError {
         serializer.serialize_str(&self.to_string())
     }
 }
+
+impl From<tokio_rusqlite::Error<rusqlite::Error>> for AppError {
+    fn from(e: tokio_rusqlite::Error<rusqlite::Error>) -> Self {
+        AppError::Internal(e.to_string())
+    }
+}

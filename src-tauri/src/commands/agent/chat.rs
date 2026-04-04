@@ -5,22 +5,16 @@ use tokio::sync::Mutex;
 use crate::agent::provider::build_agent;
 use crate::agent::types::{AgentState, ChatMessage, MessageRole, StreamEvent};
 use crate::error::AppError;
+use crate::memory::chat_store;
+use crate::memory::tools::new_tool_call_log;
 
 /// Send a user message and stream the assistant response back.
-///
-/// The user message is stored immediately. The assistant response is
-/// obtained via the rig library and delivered through a Tauri `Channel`.
 ///
 /// # Arguments
 ///
 /// * `conversation_id` - The conversation to append to.
 /// * `content` - The user's message text.
 /// * `on_event` - A Tauri channel for streaming `StreamEvent` to the frontend.
-///
-/// # Errors
-///
-/// Returns `AppError::ConversationNotFound` if the conversation does not exist.
-/// Returns `AppError::Provider` if the LLM request fails.
 #[tauri::command]
 pub async fn send_message(
     state: tauri::State<'_, Mutex<AgentState>>,
@@ -28,9 +22,9 @@ pub async fn send_message(
     content: String,
     on_event: Channel<StreamEvent>,
 ) -> Result<(), AppError> {
-    let (settings, history) = {
-        let mut state = state.lock().await;
-        if !state.conversations.iter().any(|c| c.id == conversation_id) {
+    let (settings, db, history) = {
+        let state = state.lock().await;
+        if !chat_store::conversation_exists(&state.db, &conversation_id).await? {
             return Err(AppError::ConversationNotFound(conversation_id));
         }
 
@@ -42,42 +36,34 @@ pub async fn send_message(
             content: content.clone(),
             created_at: now,
         };
-        state
-            .messages
-            .entry(conversation_id.clone())
-            .or_default()
-            .push(user_msg);
+        chat_store::insert_message(&state.db, &user_msg).await?;
 
-        let msgs = state
-            .messages
-            .get(&conversation_id)
-            .cloned()
-            .unwrap_or_default();
+        let msgs = chat_store::get_messages(&state.db, &conversation_id).await?;
         let history: Vec<Message> = msgs
             .iter()
             .map(|m| Message::from(m.content.as_str()))
             .collect();
 
-        if let Some(conv) = state
-            .conversations
-            .iter_mut()
-            .find(|c| c.id == conversation_id)
-        {
-            conv.updated_at = chrono::Utc::now().to_rfc3339();
-            if conv.title == "New Chat" && !content.is_empty() {
-                let preview: String = content.chars().take(30).collect();
-                conv.title = if content.chars().count() > 30 {
-                    format!("{preview}...")
-                } else {
-                    preview
-                };
-            }
-        }
+        let preview: String = content.chars().take(30).collect();
+        let title = if content.chars().count() > 30 {
+            format!("{preview}...")
+        } else {
+            preview
+        };
+        chat_store::update_conversation(
+            &state.db,
+            &conversation_id,
+            &title,
+            &chrono::Utc::now().to_rfc3339(),
+        )
+        .await
+        .ok();
 
-        (state.settings.clone(), history)
+        (state.settings.clone(), state.db.clone(), history)
     };
 
-    let agent = build_agent(&settings)?;
+    let tool_log = new_tool_call_log();
+    let agent = build_agent(&settings, &db, &tool_log)?;
 
     let response = match agent.chat(&content, history).await {
         Ok(text) => text,
@@ -89,22 +75,28 @@ pub async fn send_message(
         }
     };
 
+    if let Ok(calls) = tool_log.lock() {
+        for call in calls.iter() {
+            let _ = on_event.send(StreamEvent::ToolCall {
+                name: call.name.clone(),
+                args: call.args.clone(),
+                result: call.result.clone(),
+            });
+        }
+    }
+
     let now = chrono::Utc::now().to_rfc3339();
     let assistant_msg = ChatMessage {
         id: uuid::Uuid::new_v4().to_string(),
         conversation_id: conversation_id.clone(),
         role: MessageRole::Assistant,
-        content: response.clone(),
+        content: response,
         created_at: now,
     };
 
     {
-        let mut state = state.lock().await;
-        state
-            .messages
-            .entry(conversation_id)
-            .or_default()
-            .push(assistant_msg.clone());
+        let state = state.lock().await;
+        chat_store::insert_message(&state.db, &assistant_msg).await?;
     }
 
     let _ = on_event.send(StreamEvent::Done {

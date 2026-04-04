@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
+use tokio_rusqlite::Connection;
 
 /// Supported LLM API formats.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
@@ -72,6 +71,11 @@ pub enum StreamEvent {
     Delta {
         content: String,
     },
+    ToolCall {
+        name: String,
+        args: String,
+        result: String,
+    },
     Done {
         message: ChatMessage,
     },
@@ -80,13 +84,11 @@ pub enum StreamEvent {
     },
 }
 
-/// In-memory state for the agent subsystem.
+/// Application state for the agent subsystem.
 ///
-/// Designed so that `conversations` and `messages` can later be
-/// replaced by a sqlite-backed store without changing command signatures.
-#[derive(Default)]
+/// All persistent data (conversations, messages, memories) lives in
+/// the SQLite database. Settings are also persisted to a JSON file.
 pub struct AgentState {
-    pub conversations: Vec<Conversation>,
-    pub messages: HashMap<String, Vec<ChatMessage>>,
+    pub db: Connection,
     pub settings: AgentSettings,
 }

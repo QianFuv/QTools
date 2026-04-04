@@ -2,29 +2,18 @@ use tokio::sync::Mutex;
 
 use crate::agent::types::{AgentState, ChatMessage, Conversation};
 use crate::error::AppError;
+use crate::memory::chat_store;
 
 /// Return all conversations, newest first.
-///
-/// # Errors
-///
-/// Returns `AppError::Internal` if the state lock is poisoned.
 #[tauri::command]
 pub async fn get_conversations(
     state: tauri::State<'_, Mutex<AgentState>>,
 ) -> Result<Vec<Conversation>, AppError> {
     let state = state.lock().await;
-    Ok(state.conversations.clone())
+    chat_store::get_conversations(&state.db).await
 }
 
 /// Create a new empty conversation and return it.
-///
-/// # Returns
-///
-/// The newly created `Conversation`.
-///
-/// # Errors
-///
-/// Returns `AppError::Internal` if the state lock is poisoned.
 #[tauri::command]
 pub async fn create_conversation(
     state: tauri::State<'_, Mutex<AgentState>>,
@@ -36,8 +25,8 @@ pub async fn create_conversation(
         created_at: now.clone(),
         updated_at: now,
     };
-    let mut state = state.lock().await;
-    state.conversations.insert(0, conv.clone());
+    let state = state.lock().await;
+    chat_store::create_conversation(&state.db, &conv).await?;
     Ok(conv)
 }
 
@@ -46,22 +35,16 @@ pub async fn create_conversation(
 /// # Arguments
 ///
 /// * `conversation_id` - The UUID of the conversation to delete.
-///
-/// # Errors
-///
-/// Returns `AppError::ConversationNotFound` if the ID does not exist.
 #[tauri::command]
 pub async fn delete_conversation(
     state: tauri::State<'_, Mutex<AgentState>>,
     conversation_id: String,
 ) -> Result<(), AppError> {
-    let mut state = state.lock().await;
-    let before = state.conversations.len();
-    state.conversations.retain(|c| c.id != conversation_id);
-    if state.conversations.len() == before {
+    let state = state.lock().await;
+    let deleted = chat_store::delete_conversation(&state.db, &conversation_id).await?;
+    if !deleted {
         return Err(AppError::ConversationNotFound(conversation_id));
     }
-    state.messages.remove(&conversation_id);
     Ok(())
 }
 
@@ -70,26 +53,14 @@ pub async fn delete_conversation(
 /// # Arguments
 ///
 /// * `conversation_id` - The UUID of the conversation.
-///
-/// # Returns
-///
-/// A chronologically ordered list of `ChatMessage`.
-///
-/// # Errors
-///
-/// Returns `AppError::ConversationNotFound` if the conversation does not exist.
 #[tauri::command]
 pub async fn get_messages(
     state: tauri::State<'_, Mutex<AgentState>>,
     conversation_id: String,
 ) -> Result<Vec<ChatMessage>, AppError> {
     let state = state.lock().await;
-    if !state.conversations.iter().any(|c| c.id == conversation_id) {
+    if !chat_store::conversation_exists(&state.db, &conversation_id).await? {
         return Err(AppError::ConversationNotFound(conversation_id));
     }
-    Ok(state
-        .messages
-        .get(&conversation_id)
-        .cloned()
-        .unwrap_or_default())
+    chat_store::get_messages(&state.db, &conversation_id).await
 }

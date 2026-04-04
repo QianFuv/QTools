@@ -2,14 +2,14 @@ use rig::client::CompletionClient;
 use rig::completion::Chat;
 use rig::message::Message;
 use rig::providers::{anthropic, openai};
+use rig::tool::ToolDyn;
+use tokio_rusqlite::Connection;
 
 use crate::agent::types::{AgentSettings, ApiFormat};
 use crate::error::AppError;
+use crate::memory::tools::{create_memory_tools, ToolCallLog};
 
 /// Wraps provider-specific rig agent types behind a single enum.
-///
-/// This enum dispatch pattern is necessary because rig's `Agent<M>`
-/// is generic over the model type, making it non-object-safe.
 ///
 /// - `OpenAiChat` uses `CompletionsClient` (Chat Completions API),
 ///   compatible with third-party OpenAI-compatible services.
@@ -52,20 +52,27 @@ impl AgentKind {
     }
 }
 
-/// Build a rig agent from the current settings.
+/// Build a rig agent from settings, with memory tools attached.
 ///
 /// # Arguments
 ///
-/// * `settings` - The agent configuration including provider, model, and credentials.
+/// * `settings` - The agent configuration.
+/// * `conn` - Database connection for memory tools.
 ///
 /// # Returns
 ///
-/// An `AgentKind` wrapping the provider-specific agent.
+/// An `AgentKind` wrapping the provider-specific agent with tools.
 ///
 /// # Errors
 ///
 /// Returns `AppError::Provider` if client construction fails.
-pub fn build_agent(settings: &AgentSettings) -> Result<AgentKind, AppError> {
+pub fn build_agent(
+    settings: &AgentSettings,
+    conn: &Connection,
+    tool_log: &ToolCallLog,
+) -> Result<AgentKind, AppError> {
+    let tools: Vec<Box<dyn ToolDyn>> = create_memory_tools(conn, tool_log);
+
     match settings.api_format {
         ApiFormat::OpenAiChat => {
             let client = openai::CompletionsClient::builder()
@@ -76,6 +83,7 @@ pub fn build_agent(settings: &AgentSettings) -> Result<AgentKind, AppError> {
             let agent = client
                 .agent(&settings.model)
                 .preamble(&settings.system_prompt)
+                .tools(tools)
                 .build();
             Ok(AgentKind::OpenAiChat(agent))
         }
@@ -88,6 +96,7 @@ pub fn build_agent(settings: &AgentSettings) -> Result<AgentKind, AppError> {
             let agent = client
                 .agent(&settings.model)
                 .preamble(&settings.system_prompt)
+                .tools(tools)
                 .build();
             Ok(AgentKind::OpenAiResponses(agent))
         }
@@ -100,6 +109,7 @@ pub fn build_agent(settings: &AgentSettings) -> Result<AgentKind, AppError> {
             let agent = client
                 .agent(&settings.model)
                 .preamble(&settings.system_prompt)
+                .tools(tools)
                 .build();
             Ok(AgentKind::Anthropic(agent))
         }
