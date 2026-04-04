@@ -3,7 +3,11 @@ import { SolidMarkdown } from "solid-markdown";
 import { useAgent } from "../../contexts/AgentContext";
 import ChatMessage from "./ChatMessage";
 import ChatInput from "./ChatInput";
-import { agentMarkdownClass, agentRemarkPlugins } from "./markdown";
+import {
+  agentMarkdownClass,
+  agentMarkdownComponents,
+  agentRemarkPlugins,
+} from "./markdown";
 
 export default function ChatPanel() {
   const { messages, activeConversation, sendMessage, isStreaming, streamingContent, toolCalls } = useAgent();
@@ -58,6 +62,7 @@ export default function ChatPanel() {
                   <div class={agentMarkdownClass}>
                     <SolidMarkdown
                       children={streamingContent()}
+                      components={agentMarkdownComponents}
                       renderingStrategy="reconcile"
                       remarkPlugins={agentRemarkPlugins}
                     />
