@@ -1,4 +1,5 @@
 /.vscode
+/docs/ref
 /node_modules
 /dist
 /AGENTS.md

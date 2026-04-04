@@ -1,2 +1,6 @@
+packages:
+  - '.'
+  - '!docs/ref/**'
+
 allowBuilds:
   esbuild: false
