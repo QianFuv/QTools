@@ -16,7 +16,7 @@ export default function AppShell() {
         when={viewMode() === "tools"}
         fallback={<AgentWorkspace />}
       >
-        <div class="grid h-full grid-cols-[auto_1fr]">
+        <div class="grid min-h-0 grid-cols-[auto_1fr]">
           <Sidebar />
           <ContentArea />
         </div>
