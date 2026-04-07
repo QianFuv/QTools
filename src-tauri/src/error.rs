@@ -19,6 +19,10 @@ pub enum AppError {
     /// The requested conversation was not found.
     #[error("Conversation not found: {0}")]
     ConversationNotFound(String),
+
+    /// An error originating from the Canvas LMS integration.
+    #[error("Canvas error: {0}")]
+    Canvas(String),
 }
 
 impl serde::Serialize for AppError {

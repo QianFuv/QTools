@@ -85,6 +85,11 @@ CREATE INDEX IF NOT EXISTS idx_messages_conversation ON messages(conversation_id
 CREATE INDEX IF NOT EXISTS idx_memories_node ON memories(node_uuid);
 CREATE INDEX IF NOT EXISTS idx_edges_parent ON edges(parent_uuid);
 CREATE INDEX IF NOT EXISTS idx_edges_child ON edges(child_uuid);
+
+CREATE TABLE IF NOT EXISTS canvas_completed_tasks (
+    assignment_id INTEGER PRIMARY KEY,
+    completed_at TEXT NOT NULL DEFAULT (datetime('now'))
+);
 "#;
 
 /// Open the SQLite database and initialize all tables.
