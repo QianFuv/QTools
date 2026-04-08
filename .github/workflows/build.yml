@@ -57,11 +57,15 @@ jobs:
         with:
           args: ${{ matrix.args }}
 
+      - name: Collect artifacts
+        shell: bash
+        run: |
+          mkdir -p artifacts
+          find src-tauri/target -path '*/release/bundle/*' \
+            \( -name '*.exe' -o -name '*.msi' -o -name '*.dmg' -o -name '*.app' \) \
+            -exec cp -r {} artifacts/ \;
+
       - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact-name }}
-          path: |
-            src-tauri/target/**/release/bundle/**/*.exe
-            src-tauri/target/**/release/bundle/**/*.msi
-            src-tauri/target/**/release/bundle/**/*.dmg
-            src-tauri/target/**/release/bundle/**/*.app
+          path: artifacts/
