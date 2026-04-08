@@ -50,7 +50,6 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            commands::greeter::greet,
             commands::agent::settings::get_agent_settings,
             commands::agent::settings::save_agent_settings,
             commands::agent::conversations::get_conversations,
