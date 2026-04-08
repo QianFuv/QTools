@@ -5,4 +5,5 @@ export interface ToolDefinition {
   name: string;
   icon: () => JSX.Element;
   component: Component;
+  settingsComponent?: Component;
 }
