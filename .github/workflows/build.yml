@@ -58,7 +58,16 @@ jobs:
         with:
           args: ${{ matrix.args }}
 
+      - name: Resolve artifact paths
+        id: artifacts
+        shell: bash
+        run: |
+          paths=$(echo '${{ steps.build.outputs.artifactPaths }}' | jq -r '.[]')
+          echo "paths<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$paths" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
+
       - uses: actions/upload-artifact@v7
         with:
           name: ${{ matrix.artifact-name }}
-          path: ${{ join(fromJSON(steps.build.outputs.artifactPaths), '\n') }}
+          path: ${{ steps.artifacts.outputs.paths }}
