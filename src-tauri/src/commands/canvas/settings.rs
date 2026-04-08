@@ -1,8 +1,9 @@
 use std::fs;
+use std::path::Path;
 
-use tauri::{AppHandle, Manager};
 use tokio::sync::Mutex;
 
+use crate::data_dir::DataDir;
 use crate::error::AppError;
 
 use super::types::{CanvasSettings, CanvasState};
@@ -34,15 +35,12 @@ pub async fn get_canvas_settings(
 /// Returns `AppError::Canvas` if the file cannot be written.
 #[tauri::command]
 pub async fn save_canvas_settings(
-    app: AppHandle,
+    data_dir: tauri::State<'_, DataDir>,
     state: tauri::State<'_, Mutex<CanvasState>>,
     settings: CanvasSettings,
 ) -> Result<(), AppError> {
-    let dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| AppError::Canvas(e.to_string()))?;
-    fs::create_dir_all(&dir).map_err(|e| AppError::Canvas(e.to_string()))?;
+    let dir = &data_dir.0;
+    fs::create_dir_all(dir).map_err(|e| AppError::Canvas(e.to_string()))?;
 
     let path = dir.join(SETTINGS_FILE);
     let json =
@@ -60,15 +58,12 @@ pub async fn save_canvas_settings(
 ///
 /// # Arguments
 ///
-/// * `app` - The Tauri application handle used to resolve data paths.
+/// * `dir` - The data directory containing `canvas-settings.json`.
 ///
 /// # Returns
 ///
 /// The loaded or default `CanvasSettings`.
-pub fn load_canvas_settings(app: &AppHandle) -> CanvasSettings {
-    let Ok(dir) = app.path().app_data_dir() else {
-        return CanvasSettings::default();
-    };
+pub fn load_canvas_settings(dir: &Path) -> CanvasSettings {
     let path = dir.join(SETTINGS_FILE);
     let Ok(data) = fs::read_to_string(&path) else {
         return CanvasSettings::default();

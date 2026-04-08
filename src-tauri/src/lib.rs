@@ -1,5 +1,6 @@
 mod agent;
 mod commands;
+mod data_dir;
 mod error;
 mod memory;
 
@@ -9,7 +10,7 @@ use tokio::sync::Mutex;
 use crate::agent::types::AgentState;
 use crate::commands::agent::settings::load_settings_from_disk;
 use crate::commands::canvas::settings::load_canvas_settings;
-use crate::commands::canvas::types::CanvasState;
+use crate::data_dir::{resolve_data_dir, DataDir};
 use crate::memory::db::init_db;
 
 /// Build and launch the Tauri application.
@@ -20,17 +21,16 @@ use crate::memory::db::init_db;
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             let handle = app.handle().clone();
-            let settings = load_settings_from_disk(app.handle());
-            let canvas_settings = load_canvas_settings(app.handle());
+            let data_dir = resolve_data_dir();
+            let settings = load_settings_from_disk(&data_dir);
+            let canvas_settings = load_canvas_settings(&data_dir);
+
+            handle.manage(DataDir(data_dir.clone()));
 
             tauri::async_runtime::block_on(async move {
-                let data_dir = handle
-                    .path()
-                    .app_data_dir()
-                    .expect("failed to resolve app data dir");
-                std::fs::create_dir_all(&data_dir).ok();
                 let db_path = data_dir.join("qtools.db");
 
                 let db = init_db(&db_path)
@@ -40,7 +40,7 @@ pub fn run() {
                 let state = AgentState { db, settings };
                 handle.manage(Mutex::new(state));
 
-                let canvas_state = CanvasState {
+                let canvas_state = crate::commands::canvas::types::CanvasState {
                     settings: canvas_settings,
                     cache: None,
                 };
@@ -71,6 +71,9 @@ pub fn run() {
             commands::canvas::commands::refresh_canvas_data,
             commands::canvas::commands::set_task_completion,
             commands::canvas::commands::get_completed_tasks,
+            commands::data_dir::get_data_dir,
+            commands::data_dir::set_data_dir,
+            commands::data_dir::migrate_data,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

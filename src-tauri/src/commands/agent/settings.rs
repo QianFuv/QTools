@@ -1,9 +1,10 @@
 use std::fs;
+use std::path::Path;
 
-use tauri::{AppHandle, Manager};
 use tokio::sync::Mutex;
 
 use crate::agent::types::{AgentSettings, AgentState};
+use crate::data_dir::DataDir;
 use crate::error::AppError;
 
 /// Return the current agent settings.
@@ -30,15 +31,12 @@ pub async fn get_agent_settings(
 /// Returns `AppError::Settings` if the file cannot be written.
 #[tauri::command]
 pub async fn save_agent_settings(
-    app: AppHandle,
+    data_dir: tauri::State<'_, DataDir>,
     state: tauri::State<'_, Mutex<AgentState>>,
     settings: AgentSettings,
 ) -> Result<(), AppError> {
-    let dir = app
-        .path()
-        .app_data_dir()
-        .map_err(|e| AppError::Settings(e.to_string()))?;
-    fs::create_dir_all(&dir).map_err(|e| AppError::Settings(e.to_string()))?;
+    let dir = &data_dir.0;
+    fs::create_dir_all(dir).map_err(|e| AppError::Settings(e.to_string()))?;
 
     let path = dir.join("agent-settings.json");
     let json =
@@ -55,15 +53,12 @@ pub async fn save_agent_settings(
 ///
 /// # Arguments
 ///
-/// * `app` - The Tauri application handle used to resolve data paths.
+/// * `dir` - The data directory containing `agent-settings.json`.
 ///
 /// # Returns
 ///
 /// The loaded or default `AgentSettings`.
-pub fn load_settings_from_disk(app: &AppHandle) -> AgentSettings {
-    let Ok(dir) = app.path().app_data_dir() else {
-        return AgentSettings::default();
-    };
+pub fn load_settings_from_disk(dir: &Path) -> AgentSettings {
     let path = dir.join("agent-settings.json");
     let Ok(data) = fs::read_to_string(&path) else {
         return AgentSettings::default();
