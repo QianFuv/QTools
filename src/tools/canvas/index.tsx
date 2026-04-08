@@ -1,5 +1,6 @@
 import type { ToolDefinition } from "../../types/tool";
 import CanvasTool from "./CanvasTool";
+import SettingsPanel from "./SettingsPanel";
 
 const canvasTool: ToolDefinition = {
   id: "canvas",
@@ -20,6 +21,7 @@ const canvasTool: ToolDefinition = {
     </svg>
   ),
   component: CanvasTool,
+  settingsComponent: SettingsPanel,
 };
 
 export default canvasTool;

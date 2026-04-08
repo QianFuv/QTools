@@ -3,9 +3,8 @@ import { invoke } from "@tauri-apps/api/core";
 import type { CanvasData, CanvasSettings } from "./types";
 import CourseView from "./CourseView";
 import TimelineView from "./TimelineView";
-import SettingsPanel from "./SettingsPanel";
 
-type Tab = "courses" | "timeline" | "settings";
+type Tab = "courses" | "timeline";
 
 export default function CanvasTool() {
   const [tab, setTab] = createSignal<Tab>("timeline");
@@ -81,7 +80,6 @@ export default function CanvasTool() {
   const tabs: { id: Tab; label: string }[] = [
     { id: "timeline", label: "Timeline" },
     { id: "courses", label: "Courses" },
-    { id: "settings", label: "Settings" },
   ];
 
   const formatCacheTime = () => {
@@ -110,18 +108,16 @@ export default function CanvasTool() {
         </div>
 
         <div class="flex items-center gap-3">
-          <Show when={tab() !== "settings"}>
-            <button
-              onClick={() => setHideCompleted(!hideCompleted())}
-              class={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
-                hideCompleted()
-                  ? "bg-qtools-500 text-white dark:bg-qtools-400 dark:text-qtools-950"
-                  : "text-qtools-600 hover:bg-qtools-200 dark:text-qtools-300 dark:hover:bg-qtools-800"
-              }`}
-            >
-              Hide Completed
-            </button>
-          </Show>
+          <button
+            onClick={() => setHideCompleted(!hideCompleted())}
+            class={`rounded-lg px-3 py-1.5 text-sm font-medium transition-colors ${
+              hideCompleted()
+                ? "bg-qtools-500 text-white dark:bg-qtools-400 dark:text-qtools-950"
+                : "text-qtools-600 hover:bg-qtools-200 dark:text-qtools-300 dark:hover:bg-qtools-800"
+            }`}
+          >
+            Hide Completed
+          </button>
           <Show when={data()}>
             <span class="text-xs text-qtools-500 dark:text-qtools-400">
               Cached at {formatCacheTime()}
@@ -160,17 +156,6 @@ export default function CanvasTool() {
             settings={settings()}
             hideCompleted={hideCompleted()}
             onToggleCompletion={toggleCompletion}
-          />
-        </Show>
-        <Show when={tab() === "settings"}>
-          <SettingsPanel
-            settings={settings()}
-            courses={data()?.courses ?? []}
-            onSave={async (s) => {
-              await invoke("save_canvas_settings", { settings: s });
-              setSettings(s);
-              await loadData();
-            }}
           />
         </Show>
       </div>
