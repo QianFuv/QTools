@@ -1,13 +1,8 @@
 import { For } from "solid-js";
 import { useAgent } from "../../contexts/AgentContext";
 import ConversationItem from "./ConversationItem";
-import SettingsButton from "./SettingsButton";
 
-interface ConversationListProps {
-  onOpenSettings: () => void;
-}
-
-export default function ConversationList(props: ConversationListProps) {
+export default function ConversationList() {
   const { conversations, activeConversation, selectConversation, createConversation } = useAgent();
 
   return (
@@ -45,7 +40,6 @@ export default function ConversationList(props: ConversationListProps) {
           )}
         </For>
       </div>
-      <SettingsButton onClick={props.onOpenSettings} />
     </div>
   );
 }
