@@ -1,7 +1,26 @@
-# Tauri + Solid + Typescript
+# QTools
 
-This template should help get you started developing with Tauri, Solid and Typescript in Vite.
+个人工具箱桌面应用，基于 Tauri 2 + SolidJS 构建。
 
-## Recommended IDE Setup
+## 技术栈
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+- **后端**: Rust + Tauri 2
+- **前端**: SolidJS + TypeScript + Tailwind CSS
+- **数据库**: SQLite (via rusqlite)
+
+## 开发
+
+```bash
+# 安装依赖
+pnpm install
+
+# 启动开发服务
+pnpm tauri dev
+
+# 构建生产版本
+pnpm tauri build
+```
+
+## 许可证
+
+[MIT](LICENSE)
